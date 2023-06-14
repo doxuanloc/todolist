@@ -11,14 +11,30 @@ services:
     environment:
       MYSQL_DATABASE: 'todolist'
       MYSQL_ROOT_PASSWORD: 'password'
+
   backend:
     build: 
       context: ./../backend
       dockerfile: ./../backend/Dockerfile
     restart: on-failure
     links: 
-        - db
+      - db
     ports:
       - "8000:8000"
     depends_on:
       - db
+
+  frontend:
+    build: 
+      context: ./../frontend
+      dockerfile: ./../frontend/Dockerfile
+    restart: on-failure
+    ports:
+      - "3000:3000"
+
+  web:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./../nginx/nginx.conf:/etc/nginx/nginx.conf:ro

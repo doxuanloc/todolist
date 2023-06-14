@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 8000;
+const cors = require('cors')
 const { DataSource } = require("typeorm");
 
 async function getDDBClient() {
@@ -19,13 +20,14 @@ async function getDDBClient() {
 }
 
 
+
 async function main() {
 
         const dbClient = await getDDBClient()
+        app.use(cors())
         app.get("/", async (req, res) => {
                 const result = await dbClient.query("SELECT * FROM task")
-                console.log("result", result)
-                res.send("Hello World!");
+                res.json(result)
         });
 
         app.listen(port, () => {
